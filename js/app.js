@@ -1,5 +1,5 @@
 
-shuffleCards();
+arrangeDeck();
 
 
 
@@ -28,19 +28,27 @@ function shuffle(array) {
 *   - loop through each card and create its HTML
 *   - add each card's HTML to the page
 */
-function shuffleCards() {
+function arrangeDeck() {
 
 const cards_array = shuffle([].slice.call(document.body.querySelectorAll('.deck .card')));
 
 const fragment = document.createDocumentFragment();
 
 for (let i = 0; i < 16; i++) {
+        cards_array[i].addEventListener('click',cardOpen);
         fragment.appendChild(cards_array[i]);
     }
 
 document.querySelector('.deck').appendChild(fragment);
 }
 
+
+
+function cardOpen() {
+
+  console.log('opened');
+  this.className += " open show";
+}
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
