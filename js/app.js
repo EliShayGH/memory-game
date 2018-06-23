@@ -1,14 +1,8 @@
-/*
- * Create a list that holds all of your cards
- */
+
+shuffleCards();
 
 
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
+
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -25,6 +19,27 @@ function shuffle(array) {
     return array;
 }
 
+/*
+* Create a list that holds all of your cards
+*/
+/*
+* Display the cards on the page
+*   - shuffle the list of cards using the provided "shuffle" method below
+*   - loop through each card and create its HTML
+*   - add each card's HTML to the page
+*/
+function shuffleCards() {
+
+const cards_array = shuffle([].slice.call(document.body.querySelectorAll('.deck .card')));
+
+const fragment = document.createDocumentFragment();
+
+for (let i = 0; i < 16; i++) {
+        fragment.appendChild(cards_array[i]);
+    }
+
+document.querySelector('.deck').appendChild(fragment);
+}
 
 /*
  * set up the event listener for a card. If a card is clicked:
