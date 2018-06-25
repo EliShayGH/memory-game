@@ -84,15 +84,16 @@ var stack = new Stack();
 let counter = 0;
 let card1 = null, card2 = null;
 let ready_to_pick = true;
+let moves = 0;
+
+document.querySelector('span.moves').innerHTML = moves;
 
 function cardOpen()
 {
 
-    console.log('opened');
 
     // while(ready_to_pick)
     // {
-        console.log('opened');
 
         this.className += " open show";
         counter++;
@@ -121,9 +122,12 @@ function cardOpen()
                     card1.className = "card";
                     stack.pop();
                     card2.className = "card";
-                    console.log("Hello"); }, 900);
+                }, 900);
 
             }
+
+            updateStatus();
+            // document.querySelector('span.moves').innerHTML = ++moves;
 
             // ready_to_pick = true;
         }
@@ -135,6 +139,35 @@ function cardOpen()
 
 
     // }
+}
+
+let num_of_stars = 3;
+
+function updateStatus()
+{
+    const stars = document.querySelector('.stars');
+    document.querySelector('span.moves').innerHTML = ++moves;
+
+    do
+    {
+        if (num_of_stars === 1)
+            break;
+
+        if ((num_of_stars === 3) && (moves < 15))
+        {
+            break;
+        }
+
+        if ((num_of_stars === 2) && (moves < 21))
+        {
+            break;
+        }
+
+    -- num_of_stars;
+
+    stars.removeChild(document.querySelector('.stars li'));
+
+    }while(false);
 }
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -155,9 +188,6 @@ function cardOpen()
 // stack.push(20);
 // stack.push(30);
 //
-// console.log(stack.peek());
 //
-// console.log(stack.pop());
-// console.log(stack.peek());
 //
 // delete stack;
