@@ -110,3 +110,8 @@ h1 {
     float: right;
     cursor: pointer;
 }
+
+.score-panel .timer {
+    padding-right: 135px;
+  float: right;
+}
