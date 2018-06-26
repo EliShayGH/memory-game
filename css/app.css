@@ -115,3 +115,27 @@ h1 {
     padding-right: 135px;
   float: right;
 }
+
+/*
+ * Styles for the dialog box
+ */
+
+ .finish-msg {
+     display: none;
+     background-image: url('../img/success.png');
+     background-repeat: no-repeat;
+     background-position: center;
+     background-size: 100% 110%;
+     margin: 15% auto;
+     padding: 20px;
+     border: 5px solid #7427c6;
+     border-radius: 20px;
+     width: 40%;
+     height: 60%;
+     text-align: center;
+     z-index: 1;
+ }
+
+ .finish-msg h2 {
+     padding-top: 20%;
+ }

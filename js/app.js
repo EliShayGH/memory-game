@@ -30,11 +30,20 @@ class Stack
     {
         return this.items.length;
     }
+
+    popAll()
+    {
+        for(let i = 0; i < this.items.length; ++i)
+        {
+            this.items.pop();
+        }
+    }
 }
 
+let time = 0;
+let startingTime = 0;
+
 arrangeDeck();
-
-
 
 
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -64,8 +73,13 @@ function shuffle(array)
 *   - add each card's HTML to the page
 */
 
+let stack = new Stack();
+
+
 function arrangeDeck()
 {
+    time = performance.now();
+    startingTime = performance.now();
 
     const cards_array = shuffle([].slice.call(document.body.querySelectorAll('.deck .card')));
 
@@ -74,28 +88,33 @@ function arrangeDeck()
     for (let i = 0; i < 16; i++)
     {
         cards_array[i].addEventListener('click',cardOpen);
+        cards_array[i].className = "card";
         fragment.appendChild(cards_array[i]);
     }
 
     document.querySelector('.deck').appendChild(fragment);
+
+    // document.querySelector('.finish-msg').style.display = "none";
 }
 
-
-var stack = new Stack();
 let counter = 0;
 let card1 = null, card2 = null;
 let moves = 0;
 
 document.querySelector('span.moves').innerHTML = moves;
 
+document.querySelector('.restart').addEventListener('click', restartGame);
+
 function cardOpen()
 {
+    updateTimer();
+
     this.className += " open show";
     counter++;
 
     if (counter % 2 == 0)
     {
-        setClickAbility(false);
+        setClickAbility(false); //disable pointer-click events
 
         card1 = stack.peek();
         card2 = this;
@@ -119,22 +138,30 @@ function cardOpen()
                 card1.className = "card";
                 stack.pop();
                 card2.className = "card";
-                setClickAbility(true);
-            }, 900);
+                setClickAbility(true); //anable pointer-click events
+            }, 600);
 
         }
 
-        updateStatus();
+        updateStatus(); //update my moves and stars
+
+        if (stack.size() == 16)
+        {
+            setClickAbility(false);
+
+            setTimeout(function(){
+            showSuccessDialog();
+        }, 300);
+        }
 
     }
 
     else
-    {
+    {//in case it's the first card push to stack
         stack.push(this);
     }
 
 }
-
 
 let num_of_stars = 3;
 
@@ -170,44 +197,58 @@ function setClickAbility(status)
     document.querySelector('.deck').className = (status) ? "deck" : "deck unclickable";
 }
 
-const startingTime = performance.now();
-let time = startingTime;
 
 function updateTimer()
 {
     time = performance.now();
 
-    document.querySelector('span.moves').innerHTML = generateTime(time, startingTime);
+    document.querySelector('.timer span').innerHTML = generateTime(time, startingTime);
 
     if (stack.size() < 16)
     {
         setTimeout(updateTimer, 0);
     }
+
 }
 
 function generateTime(end, start)
 {
-    return
+    const time_in_ms = end - start;
+    const minutes = Math.floor(time_in_ms / 60000);
+    const seconds = ((time_in_ms % 60000) / 1000).toFixed(0);
+
+    return (minutes < 10 ? '0' : '') + minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
 }
-/*
- * set up the event listener for a card. If a card is clicked:
- *  - display the card's symbol (put this functionality in another function that you call from this one)
- *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
- *  - if the list already has another card, check to see if the two cards match
- *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
- *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
- */
 
+function showSuccessDialog()
+{
+    document.querySelector('span.finish_stars').innerHTML = num_of_stars;
+    document.querySelector('span.finish_time').innerHTML = document.querySelector('.timer span').innerHTML;
+    document.querySelector('.finish-msg').style.display = "block";
+}
 
+function restartGame()
+{
+    arrangeDeck();
+    document.querySelector('.finish-msg').style.display = "none";
+    document.querySelector('span.moves').innerHTML = 0;
+    stack.popAll();
+    setClickAbility(true);
 
+    const stars = document.querySelector('.stars');
+    const star_item = document.querySelector('.stars li').cloneNode(true);
 
+    while (stars.firstChild)
+    {
+        stars.removeChild(stars.firstChild);
+    }
 
-// stack.push(10);
-// stack.push(20);
-// stack.push(30);
-//
-//
-//
-// delete stack;
+    for (let i = 0; i < 3; ++i)
+    {
+        document.querySelector('.stars').appendChild(star_item.cloneNode(true));
+    }
+
+    num_of_stars = 3;
+    moves = 0;
+
+}
