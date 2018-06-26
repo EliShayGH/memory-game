@@ -28,7 +28,7 @@ class Stack
 
     size()
     {
-        return this.item.length;
+        return this.items.length;
     }
 }
 
@@ -92,7 +92,7 @@ function cardOpen()
 {
     this.className += " open show";
     counter++;
-    console.log('conuter = '+counter);
+
     if (counter % 2 == 0)
     {
         setClickAbility(false);
@@ -168,6 +168,26 @@ function updateStatus()
 function setClickAbility(status)
 {
     document.querySelector('.deck').className = (status) ? "deck" : "deck unclickable";
+}
+
+const startingTime = performance.now();
+let time = startingTime;
+
+function updateTimer()
+{
+    time = performance.now();
+
+    document.querySelector('span.moves').innerHTML = generateTime(time, startingTime);
+
+    if (stack.size() < 16)
+    {
+        setTimeout(updateTimer, 0);
+    }
+}
+
+function generateTime(end, start)
+{
+    return
 }
 /*
  * set up the event listener for a card. If a card is clicked:
