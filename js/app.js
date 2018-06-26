@@ -63,6 +63,7 @@ function shuffle(array)
 *   - loop through each card and create its HTML
 *   - add each card's HTML to the page
 */
+
 function arrangeDeck()
 {
 
@@ -83,63 +84,57 @@ function arrangeDeck()
 var stack = new Stack();
 let counter = 0;
 let card1 = null, card2 = null;
-let ready_to_pick = true;
 let moves = 0;
 
 document.querySelector('span.moves').innerHTML = moves;
 
 function cardOpen()
 {
+    this.className += " open show";
+    counter++;
+    console.log('conuter = '+counter);
+    if (counter % 2 == 0)
+    {
+        setClickAbility(false);
 
+        card1 = stack.peek();
+        card2 = this;
 
-    // while(ready_to_pick)
-    // {
-
-        this.className += " open show";
-        counter++;
-
-        if (counter % 2 == 0)
+        if (card1.querySelector('i').className === card2.querySelector('i').className)
         {
-            // ready_to_pick = false;
+            card1.className = "card match";
+            card1.removeEventListener('click',cardOpen);
 
-            card1 = stack.peek();
-            card2 = this;
+            card2.className += "card match";
+            card2.removeEventListener('click',cardOpen);
 
-            if (card1.querySelector('i').className === card2.querySelector('i').className)
-            {
-                card1.className = "card match";
-                card1.removeEventListener('click',cardOpen);
+            stack.push(card2);
 
-                card2.className += "card match";
-                card2.removeEventListener('click',cardOpen);
-
-                stack.push(card2);
-            }
-
-            else
-            {
-                setTimeout(function(){
-                    card1.className = "card";
-                    stack.pop();
-                    card2.className = "card";
-                }, 900);
-
-            }
-
-            updateStatus();
-            // document.querySelector('span.moves').innerHTML = ++moves;
-
-            // ready_to_pick = true;
+            setClickAbility(true);
         }
 
         else
         {
-            stack.push(this);
+            setTimeout(function(){
+                card1.className = "card";
+                stack.pop();
+                card2.className = "card";
+                setClickAbility(true);
+            }, 900);
+
         }
 
+        updateStatus();
 
-    // }
+    }
+
+    else
+    {
+        stack.push(this);
+    }
+
 }
+
 
 let num_of_stars = 3;
 
@@ -168,6 +163,11 @@ function updateStatus()
     stars.removeChild(document.querySelector('.stars li'));
 
     }while(false);
+}
+
+function setClickAbility(status)
+{
+    document.querySelector('.deck').className = (status) ? "deck" : "deck unclickable";
 }
 /*
  * set up the event listener for a card. If a card is clicked:
