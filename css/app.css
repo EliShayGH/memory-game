@@ -130,12 +130,31 @@ h1 {
      padding: 20px;
      border: 5px solid #7427c6;
      border-radius: 20px;
-     width: 40%;
-     height: 60%;
+     width: 480px;
+     height: 495px;
      text-align: center;
      z-index: 1;
+     /* position: relative; */
+     top: 60px;
  }
 
  .finish-msg h2 {
      padding-top: 20%;
+     font-size: 30px;
+ }
+
+ .finish-msg .button {
+     background-color: #26d371;
+     border: none;
+     border-radius: 20px;
+     color: white;
+     text-align: center;
+     padding: 15px 32px;
+     text-decoration: none;
+     cursor: pointer;
+     margin: auto;
+     display: inline-block;
+     font-size: 16px;
+     position: relative;
+     bottom: 220px;
  }

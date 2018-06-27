@@ -33,15 +33,16 @@ class Stack
 
     popAll()
     {
-        for(let i = 0; i < this.items.length; ++i)
+        while(this.items.pop())
         {
-            this.items.pop();
+            // this.items.pop();
         }
     }
 }
 
 let time = 0;
 let startingTime = 0;
+let game_mode = "play";
 
 arrangeDeck();
 
@@ -63,27 +64,13 @@ function shuffle(array)
     return array;
 }
 
-/*
-* Create a list that holds all of your cards
-*/
-/*
-* Display the cards on the page
-*   - shuffle the list of cards using the provided "shuffle" method below
-*   - loop through each card and create its HTML
-*   - add each card's HTML to the page
-*/
-
 let stack = new Stack();
-
 
 function arrangeDeck()
 {
-    time = performance.now();
-    startingTime = performance.now();
-
     const cards_array = shuffle([].slice.call(document.body.querySelectorAll('.deck .card')));
-
     const fragment = document.createDocumentFragment();
+    startingTime = 0;
 
     for (let i = 0; i < 16; i++)
     {
@@ -93,8 +80,6 @@ function arrangeDeck()
     }
 
     document.querySelector('.deck').appendChild(fragment);
-
-    // document.querySelector('.finish-msg').style.display = "none";
 }
 
 let counter = 0;
@@ -104,10 +89,17 @@ let moves = 0;
 document.querySelector('span.moves').innerHTML = moves;
 
 document.querySelector('.restart').addEventListener('click', restartGame);
+document.querySelector('.finish-msg .button').addEventListener('click', restartGame);
 
 function cardOpen()
 {
-    updateTimer();
+    if (startingTime == 0)
+    {
+        game_mode = "play";
+        time = performance.now();
+        startingTime = performance.now();
+        updateTimer();
+    }
 
     this.className += " open show";
     counter++;
@@ -134,30 +126,29 @@ function cardOpen()
 
         else
         {
-            setTimeout(function(){
+            setTimeout(function() {
                 card1.className = "card";
                 stack.pop();
                 card2.className = "card";
                 setClickAbility(true); //anable pointer-click events
             }, 600);
-
         }
 
-        updateStatus(); //update my moves and stars
+        updateStars(); //update my moves and stars
 
         if (stack.size() == 16)
         {
             setClickAbility(false);
 
-            setTimeout(function(){
+            setTimeout(function() {
             showSuccessDialog();
-        }, 300);
+            }, 300);
         }
-
     }
 
     else
     {//in case it's the first card push to stack
+        this.className += " unclickable";
         stack.push(this);
     }
 
@@ -165,7 +156,7 @@ function cardOpen()
 
 let num_of_stars = 3;
 
-function updateStatus()
+function updateStars()
 {
     const stars = document.querySelector('.stars');
     document.querySelector('span.moves').innerHTML = ++moves;
@@ -201,14 +192,12 @@ function setClickAbility(status)
 function updateTimer()
 {
     time = performance.now();
-
     document.querySelector('.timer span').innerHTML = generateTime(time, startingTime);
 
-    if (stack.size() < 16)
+    if ((stack.size() < 16) && (game_mode == "play"))
     {
-        setTimeout(updateTimer, 0);
+        setTimeout(updateTimer, 1);
     }
-
 }
 
 function generateTime(end, start)
@@ -225,10 +214,12 @@ function showSuccessDialog()
     document.querySelector('span.finish_stars').innerHTML = num_of_stars;
     document.querySelector('span.finish_time').innerHTML = document.querySelector('.timer span').innerHTML;
     document.querySelector('.finish-msg').style.display = "block";
+    document.querySelector('.timer span').innerHTML = "00:00";
 }
 
 function restartGame()
 {
+    game_mode = "stop";
     arrangeDeck();
     document.querySelector('.finish-msg').style.display = "none";
     document.querySelector('span.moves').innerHTML = 0;
@@ -250,5 +241,9 @@ function restartGame()
 
     num_of_stars = 3;
     moves = 0;
+
+    setTimeout(function() {
+        document.querySelector('.timer span').innerHTML = "00:00";
+    }, 10);
 
 }
