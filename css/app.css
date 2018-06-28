@@ -17,7 +17,9 @@ body {
 }
 
 body {
-    background: #ffffff url('../img/geometry2.png'); /* Background pattern from Subtle Patterns */
+    background-image: url('../img/background.jpg');/* Background pattern from Subtle Patterns */
+    background-repeat: no-repeat;
+	background-size: 100%;
     font-family: 'Coda', cursive;
 }
 
@@ -126,7 +128,7 @@ h1 {
      background-repeat: no-repeat;
      background-position: center;
      background-size: 100% 110%;
-     margin: 15% auto;
+     margin: 110px auto;
      padding: 20px;
      border: 5px solid #7427c6;
      border-radius: 20px;
@@ -134,8 +136,6 @@ h1 {
      height: 495px;
      text-align: center;
      z-index: 1;
-     /* position: relative; */
-     top: 60px;
  }
 
  .finish-msg h2 {
